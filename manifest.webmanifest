@@ -1,0 +1,17 @@
+{
+  "name": "Parfum Stock - Parfumerie 51",
+  "short_name": "Parfum Stock",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0d0d0e",
+  "theme_color": "#111111",
+  "description": "Gestion du stock des fragrances - Parfumerie 51",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

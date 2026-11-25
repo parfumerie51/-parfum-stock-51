@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111111"><meta name="description" content="Parfum Stock - Parfumerie 51">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>Parfum Stock | Parfumerie 51</title>
+<style>
+:root{--bg:#0d0d0e;--panel:#181819;--panel2:#222223;--gold:#d7b66b;--gold2:#f0d99e;--muted:#aaa18e;--line:#3b3426;--white:#f6f2e9;--red:#e27a72;--green:#8ec7a0}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--white);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+header{padding:20px 16px 14px;background:linear-gradient(135deg,#171717,#090909);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:3}
+.brand{display:flex;justify-content:space-between;align-items:center;gap:12px}.brand h1{margin:0;color:var(--gold2);font-size:21px;letter-spacing:1px}.brand small{color:var(--muted);display:block;margin-top:3px;letter-spacing:2px}.crown{font-size:28px;color:var(--gold)}
+main{max-width:900px;margin:auto;padding:16px 14px 90px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:12px 0 16px}.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px}.stat span{display:block;color:var(--muted);font-size:12px}.stat b{display:block;color:var(--gold2);font-size:22px;margin-top:4px}
+.tabs{display:flex;gap:7px;overflow:auto;margin:12px 0}.tab,.btn{border:1px solid var(--line);background:var(--panel2);color:var(--white);padding:10px 13px;border-radius:11px;cursor:pointer;font:inherit;white-space:nowrap}.tab.active,.btn.gold{background:var(--gold);color:#17130b;border-color:var(--gold);font-weight:700}
+.tools{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:10px}.search,input,select,textarea{background:#202021;color:var(--white);border:1px solid #51452f;border-radius:10px;padding:11px;font:inherit;min-width:0;width:100%}
+.filters{display:flex;gap:8px;margin-bottom:12px}.filters select{flex:1}
+.list{display:grid;gap:8px}.item{background:var(--panel);border:1px solid #332d22;border-radius:13px;padding:12px;display:grid;grid-template-columns:1fr auto;gap:8px}.item h3{font-size:15px;margin:0 0 5px}.meta{color:var(--muted);font-size:12px}.qty{color:var(--gold2);font-weight:700;font-size:17px;text-align:left}.low{color:var(--red)}.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.actions button{font-size:12px;padding:7px 10px}
+.empty{text-align:center;color:var(--muted);padding:28px}.section-title{color:var(--gold2);font-size:16px;margin:18px 0 10px}
+dialog{background:#181819;color:var(--white);border:1px solid var(--gold);border-radius:16px;width:min(94%,480px);padding:18px}dialog::backdrop{background:#000b}.field{margin:10px 0}.field label{display:block;color:var(--muted);font-size:13px;margin-bottom:5px}.row{display:flex;gap:8px}.row>*{flex:1}.foot{color:#777;font-size:11px;text-align:center;margin-top:24px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--gold);color:#17130b;padding:10px 16px;border-radius:20px;display:none;z-index:10}
+@media(max-width:420px){.stats{grid-template-columns:repeat(3,1fr)}.stat{padding:9px}.stat b{font-size:18px}.tools{grid-template-columns:1fr}.tools .btn{width:100%}}
+</style></head>
+<body>
+<header><div class="brand"><div><h1>PARFUMERIE 51</h1><small>PARFUM STOCK</small></div><div class="crown">♛</div></div></header>
+<main>
+<div class="stats"><div class="stat"><span>عدد المراجع</span><b id="total">232</b></div><div class="stat"><span>مجموع المخزون</span><b id="stock">0 ml</b></div><div class="stat"><span>مخزون ناقص</span><b id="lowCount">0</b></div></div>
+<div class="tabs"><button class="tab active" data-view="stock">المخزون</button><button class="tab" data-view="history">سجل العمليات</button><button class="tab" data-view="alerts">تنبيهات النقص</button></div>
+<div id="stockView">
+<div class="tools"><input id="search" class="search" placeholder="قلب بالكود أو اسم العطر..."><button class="btn gold" id="addBtn">＋ إضافة مرجع</button></div>
+<div class="filters"><select id="category"><option value="الكل">جميع الأصناف</option><option>Homme</option><option>Femme</option><option>Unisex</option></select><select id="sort"><option value="code">ترتيب حسب الكود</option><option value="name">ترتيب حسب الاسم</option><option value="quantity">الأكثر مخزوناً</option></select></div>
+<div id="items" class="list"></div>
+</div>
+<div id="historyView" hidden><h2 class="section-title">آخر العمليات</h2><div id="history" class="list"></div></div>
+<div id="alertsView" hidden><h2 class="section-title">مراجع وصلت للحد الأدنى</h2><div id="alerts" class="list"></div></div>
+<div class="foot">البيانات محفوظة على هذا الجهاز. دير نسخة احتياطية بانتظام.</div>
+</main>
+<div id="toast" class="toast"></div>
+<dialog id="editDialog"><form method="dialog" id="editForm"><h3 id="dialogTitle">تعديل المرجع</h3><div class="field"><label>الكود</label><input id="fCode" required></div><div class="field"><label>اسم العطر</label><input id="fName" required></div><div class="field"><label>الصنف</label><select id="fCategory"><option>Homme</option><option>Femme</option><option>Unisex</option></select></div><div class="field"><label>الكمية الحالية (ml)</label><input id="fQty" type="number" min="0" step="0.1" required></div><div class="field"><label>حد التنبيه (ml) — اختياري</label><input id="fThreshold" type="number" min="0" step="0.1" placeholder="خليه فارغ إلا ما بغيتيش تنبيه"></div><div class="row"><button class="btn gold" id="saveItem" type="button">حفظ</button><button class="btn" value="cancel">إلغاء</button></div></form></dialog>
+<dialog id="moveDialog"><form method="dialog"><h3 id="moveTitle">تسجيل عملية</h3><div class="field"><label>الكمية بالملليلتر</label><input id="moveQty" type="number" min="0.1" step="0.1" required></div><div class="field"><label>ملاحظة (اختياري)</label><input id="moveNote" placeholder="مثلاً: شراء من المورد"></div><div class="row"><button class="btn gold" id="confirmMove" type="button">تأكيد العملية</button><button class="btn" value="cancel">إلغاء</button></div></form></dialog>
+<script src="catalogue.js"></script><script src="app.js"></script>
+</body></html>
