@@ -11,7 +11,7 @@
 header{padding:20px 16px 14px;background:linear-gradient(135deg,#171717,#090909);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:3}
 .brand{display:flex;justify-content:space-between;align-items:center;gap:12px}.brand h1{margin:0;color:var(--gold2);font-size:21px;letter-spacing:1px}.brand small{color:var(--muted);display:block;margin-top:3px;letter-spacing:2px}.crown{font-size:28px;color:var(--gold)}
 main{max-width:900px;margin:auto;padding:16px 14px 90px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:12px 0 16px}.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px}.stat span{display:block;color:var(--muted);font-size:12px}.stat b{display:block;color:var(--gold2);font-size:22px;margin-top:4px}
-.tabs{display:flex;gap:7px;overflow:auto;margin:12px 0}.tab,.btn{border:1px solid var(--line);background:var(--panel2);color:var(--white);padding:10px 13px;border-radius:11px;cursor:pointer;font:inherit;white-space:nowrap}.tab.active,.btn.gold{background:var(--gold);color:#17130b;border-color:var(--gold);font-weight:700}
+.tabs{display:flex;gap:7px;overflow:auto;margin:12px 0}.backup-bar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}.backup-bar .btn{flex:1;min-width:145px}.tab,.btn{border:1px solid var(--line);background:var(--panel2);color:var(--white);padding:10px 13px;border-radius:11px;cursor:pointer;font:inherit;white-space:nowrap}.tab.active,.btn.gold{background:var(--gold);color:#17130b;border-color:var(--gold);font-weight:700}
 .tools{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:10px}.search,input,select,textarea{background:#202021;color:var(--white);border:1px solid #51452f;border-radius:10px;padding:11px;font:inherit;min-width:0;width:100%}
 .filters{display:flex;gap:8px;margin-bottom:12px}.filters select{flex:1}
 .list{display:grid;gap:8px}.item{background:var(--panel);border:1px solid #332d22;border-radius:13px;padding:12px;display:grid;grid-template-columns:1fr auto;gap:8px}.item h3{font-size:15px;margin:0 0 5px}.meta{color:var(--muted);font-size:12px}.qty{color:var(--gold2);font-weight:700;font-size:17px;text-align:left}.low{color:var(--red)}.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.actions button{font-size:12px;padding:7px 10px}
@@ -25,6 +25,11 @@ dialog{background:#181819;color:var(--white);border:1px solid var(--gold);border
 <main>
 <div class="stats"><div class="stat"><span>عدد المراجع</span><b id="total">232</b></div><div class="stat"><span>مجموع المخزون</span><b id="stock">0 ml</b></div><div class="stat"><span>مخزون ناقص</span><b id="lowCount">0</b></div></div>
 <div class="tabs"><button class="tab active" data-view="stock">المخزون</button><button class="tab" data-view="history">سجل العمليات</button><button class="tab" data-view="alerts">تنبيهات النقص</button></div>
+<div class="backup-bar" aria-label="النسخ الاحتياطي">
+<button class="btn gold" id="exportBtn" type="button">⬇ حفظ نسخة احتياطية</button>
+<button class="btn" id="importBtn" type="button">⬆ استرجاع نسخة</button>
+<input id="backupFile" type="file" accept=".json,application/json" hidden>
+</div>
 <div id="stockView">
 <div class="tools"><input id="search" class="search" placeholder="قلب بالكود أو اسم العطر..."><button class="btn gold" id="addBtn">＋ إضافة مرجع</button></div>
 <div class="filters"><select id="category"><option value="الكل">جميع الأصناف</option><option>Homme</option><option>Femme</option><option>Unisex</option></select><select id="sort"><option value="code">ترتيب حسب الكود</option><option value="name">ترتيب حسب الاسم</option><option value="quantity">الأكثر مخزوناً</option></select></div>

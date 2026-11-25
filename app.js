@@ -25,9 +25,29 @@ function switchView(v){currentView=v;document.querySelectorAll('.tab').forEach(b
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>switchView(b.dataset.view)));
 $('search').addEventListener('input',render);$('category').addEventListener('change',render);$('sort').addEventListener('change',render);
 $('addBtn').addEventListener('click',()=>edit(null));$('saveItem').addEventListener('click',saveItem);$('confirmMove').addEventListener('click',confirmMove);
-function exportBackup(){let blob=new Blob([JSON.stringify({items,history,exported:new Date().toISOString()},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Parfumerie51-backup.json';a.click();URL.revokeObjectURL(a.href)}
-function importBackup(file){let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(!Array.isArray(d.items)||!Array.isArray(d.history))throw 0;if(!confirm('استرجاع النسخة غادي يعوض البيانات الحالية. نكملو؟'))return;items=d.items;history=d.history;persist();render();toast('ترجعات النسخة بنجاح')}catch(e){toast('ملف النسخة غير صالح')}};r.readAsText(file)}
-// Backup actions via long press on brand header: simple visible browser menu
-document.querySelector('.brand').addEventListener('click',()=>{let choice=prompt('1 = تصدير نسخة احتياطية\\n2 = استرجاع نسخة احتياطية');if(choice==='1')exportBackup();else if(choice==='2'){let inp=document.createElement('input');inp.type='file';inp.accept='.json,application/json';inp.onchange=()=>inp.files[0]&&importBackup(inp.files[0]);inp.click()}});
+function exportBackup(){
+ const backup={items,history,exported:new Date().toISOString(),app:'Parfum Stock - Parfumerie 51'};
+ const blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json'});
+ const url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download='Parfumerie51-backup.json';document.body.appendChild(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1500);
+ toast('وجدنا النسخة الاحتياطية، قلب عليها فالتنزيلات');
+}
+function importBackup(file){
+ if(!file)return;
+ const r=new FileReader();
+ r.onload=()=>{try{
+  const d=JSON.parse(r.result);
+  if(!Array.isArray(d.items)||!Array.isArray(d.history))throw new Error('invalid backup');
+  if(!confirm('استرجاع النسخة غادي يعوض البيانات الحالية. واش متأكد؟'))return;
+  items=d.items;history=d.history;persist();render();toast('ترجعات النسخة بنجاح');
+ }catch(e){toast('ملف النسخة غير صالح')}};
+ r.readAsText(file);
+}
+$('exportBtn').addEventListener('click',exportBackup);
+$('importBtn').addEventListener('click',()=>$('backupFile').click());
+$('backupFile').addEventListener('change',e=>{importBackup(e.target.files[0]);e.target.value=''});
+// Keep the old header shortcut available for compatibility.
+document.querySelector('.brand').addEventListener('click',()=>{let choice=prompt('1 = تصدير نسخة احتياطية\n2 = استرجاع نسخة احتياطية');if(choice==='1')exportBackup();else if(choice==='2')$('backupFile').click()});
 render();
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
